@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.math.Vector2;
-import java.util.Random;
 
 public class Rec2D {
     public Vector2 Scale;
@@ -15,10 +14,9 @@ public class Rec2D {
     private Pixmap _pixelMap;
     private Color _color;
 
-    public Rec2D(Vector2 scale, Vector2 position, Vector2 velocity, Color color){
+    public Rec2D(Vector2 scale, Vector2 position, Color color){
         Scale = scale;
         Position = position;
-        Velocity = velocity;
         _color = color;
         generateTexture();
     }
@@ -35,18 +33,7 @@ public class Rec2D {
     }
 
     public void update(){
-        Position.add(Velocity);
         
-        if(Position.x > 584 - Scale.x || Position.x < 0) {
-            Velocity.x = -Velocity.x;
-            Random rand = new Random();
-            changeColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1));
-        }
-        if(Position.y > 480 - Scale.y || Position.y < 0){
-            Velocity.y = -Velocity.y;
-            Random rand = new Random();
-            changeColor(new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1));
-        }
     }
 
     public void changeColor(Color newColor){
