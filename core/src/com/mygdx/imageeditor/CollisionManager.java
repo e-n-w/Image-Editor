@@ -9,11 +9,34 @@ public class CollisionManager {
         Instance = this;
     }
 
-    public Button getCollision(Vector2 coordinates){
-        for(Button button : InputManager.Instance.Buttons){
-            if(coordinates.x >= button.Position.x && coordinates.x <= button.Position.x + button.Scale.x){
-                if(coordinates.y >= button.Position.y && coordinates.y <= button.Position.y + button.Scale.y){
-                    return button;
+    public IClickable getClicked(Vector2 coordinates){
+        for(IClickable clickable : InputManager.Instance.Clickables){
+            Rec2D clickableRec;
+            if(clickable instanceof Rec2D){
+                clickableRec = (Rec2D)clickable;
+            }else{
+                continue;
+            }
+            if(coordinates.x >= clickableRec.Position.x && coordinates.x <= clickableRec.Position.x + clickableRec.Scale.x){
+                if(coordinates.y >= clickableRec.Position.y && coordinates.y <= clickableRec.Position.y + clickableRec.Scale.y){
+                    return clickable;
+                }
+            }
+        }
+        return null;
+    }
+
+    public IHoverable getHovered(Vector2 coordinates) {
+        for(IHoverable hoverable : InputManager.Instance.Hoverables){
+            Rec2D hoverableRec;
+            if(hoverable instanceof Rec2D){
+                hoverableRec = (Rec2D)hoverable;
+            }else{
+                continue;
+            }
+            if(coordinates.x >= hoverableRec.Position.x && coordinates.x <= hoverableRec.Position.x + hoverableRec.Scale.x){
+                if(coordinates.y >= hoverableRec.Position.y && coordinates.y <= hoverableRec.Position.y + hoverableRec.Scale.y){
+                    return hoverable;
                 }
             }
         }
