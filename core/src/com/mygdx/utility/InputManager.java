@@ -1,14 +1,20 @@
-package com.mygdx.imageeditor;
+package com.mygdx.utility;
+
+import com.badlogic.gdx.Input.Keys;
+
+import java.io.IOException;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.imageeditor.ImageEditor;
 
 public class InputManager implements InputProcessor{
     public Array<IClickable> Clickables = new Array<>();
     public Array<IHoverable> Hoverables = new Array<>();
     private IHoverable _hovered;
     private IClickable _clicked;
+    private boolean _controlPressed;
 
     public static InputManager Instance;
 
@@ -18,11 +24,18 @@ public class InputManager implements InputProcessor{
 
     @Override
     public boolean keyDown(int keycode) {
+        if(_controlPressed && keycode == Keys.S){
+            if(ImageInputOutput.Instance.ImageFolderLocation == null) return false;
+            try{ImageInputOutput.Instance.saveImage(ImageInputOutput.Instance.ImageFolderLocation + "\\output.bmp");}
+            catch(IOException e){}
+        }
+        if(keycode == Keys.CONTROL_LEFT) _controlPressed = true;
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
+        if(keycode == Keys.CONTROL_LEFT) _controlPressed = false;
         return false;
     }
 
@@ -71,14 +84,19 @@ public class InputManager implements InputProcessor{
         IHoverable collision = CollisionManager.Instance.getHovered(
             new Vector2(screenX, ImageEditor.Instance.ScreenSize.y - screenY)
         );
-        if(collision != _hovered && _hovered != null){
-            _hovered.onHoverExit();
-            _hovered = null;
-        }
+        if(_hovered != null && _hovered != collision) _hovered.onHoverExit();
         if(collision != null){
-            if(collision != _hovered)
-                collision.onHovered();
+            collision.onHovered();
+            if(collision != _hovered){
+                _clicked = null;
+            }
             _hovered = collision;
+        }
+        if(collision != _hovered){
+            _clicked = null;
+        }
+        if(collision == null){
+            _hovered = null;
         }
         return false;
     }

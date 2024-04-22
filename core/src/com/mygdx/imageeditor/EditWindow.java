@@ -5,18 +5,24 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.utility.IClickable;
+import com.mygdx.utility.InputManager;
 
 public class EditWindow extends Rec2D implements IClickable{
     public Texture DoodleTexture;
-    private Pixmap _doodleMap;
+    public static EditWindow Instance;
+    public Pixmap DoodleMap;
     private Vector2 _previousPaintPosition;
+    public Color DrawColor;
 
-    public EditWindow(Vector2 scale, Vector2 position, Color backgroundColor){
-        super(scale, position, backgroundColor);
-        _doodleMap = new Pixmap((int)scale.x, (int)scale.y, Format.RGBA8888);
-        _doodleMap.setColor(Color.ORANGE);
-        DoodleTexture = new Texture(_doodleMap);
+    public EditWindow(Vector2 scale, Vector2 position){
+        super(scale, position, Color.SLATE);
+        DoodleMap = new Pixmap((int)scale.x, (int)scale.y, Format.RGBA8888);
+        DrawColor = Color.WHITE;
+        DoodleMap.setColor(DrawColor);
+        DoodleTexture = new Texture(DoodleMap);
         InputManager.Instance.Clickables.add(this);
+        Instance = this;
     }
 
     private void paintAtPosition(Vector2 position){
@@ -31,11 +37,11 @@ public class EditWindow extends Rec2D implements IClickable{
         int startY = (int)_previousPaintPosition.y;
         int endX = (int)paintPosition.x;
         int endY = (int)paintPosition.y;
-        _doodleMap.drawLine(startX, startY, endX, endY);
-        _doodleMap.drawLine(startX + 1, startY, endX + 1, endY);
-        _doodleMap.drawLine(startX - 1, startY, endX - 1, endY);
+        DoodleMap.drawLine(startX, startY, endX, endY);
+        DoodleMap.drawLine(startX + 1, startY, endX + 1, endY);
+        DoodleMap.drawLine(startX - 1, startY, endX - 1, endY);
         _previousPaintPosition = paintPosition;
-        DoodleTexture = new Texture(_doodleMap);
+        DoodleTexture = new Texture(DoodleMap);
     }
 
     @Override
